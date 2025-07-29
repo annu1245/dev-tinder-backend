@@ -1,19 +1,25 @@
-const express = require('express');
+const express = require("express");
+const connectDB = require("./database/db")
 const app = express();
+const userRouter = require('./router/user');
+require('dotenv').config();
+const cookieParser = require('cookie-parser');
 
-const port  = '7777';
+const port = process.env.PORT;
 
-app.use("/", (req, res) => {
-  res.send("hello world")
+
+app.use(express.json());
+app.use(cookieParser())
+
+app.use('/', userRouter);
+
+connectDB()
+.then(() => {
+  console.log("mongoose databse connected");
+})
+.then(() => {
+  app.listen(port, () => {
+    console.log("app listning on port: ", port)
+  })
 })
 
-app.use('/test', (req, res) => {
-  res.send("Hello from the test")
-})
-
-
-
-
-app.listen(port, () => {
-  console.log("app listning on port :", port);
-})
