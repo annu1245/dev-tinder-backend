@@ -22,4 +22,18 @@ const validateSignUp = (data) => {
     }
 };
 
-module.exports = validateSignUp;
+const validateLogin = (data) => {
+  const {email, password} = data;
+
+  if(!email) {
+    throw new Error("EmailId is required")
+  } else if (!password) {
+    throw new Error("Password is required")
+  } else if (!validator.isEmail(email)) {
+    throw new Error("Invalid credentials")
+  } else if (!validator.isStrongPassword(password)) {
+    throw new Error("Invalid credentials")
+  }
+}
+
+module.exports = { validateSignUp, validateLogin }

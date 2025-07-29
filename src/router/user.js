@@ -3,14 +3,14 @@ const userRouter = express.Router();
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
-const validate = require("../utils/validate");
+const {validateSignUp, validateLogin} = require("../utils/validate");
 const jwt = require('jsonwebtoken');
 const userAuth = require("../middleware/auth");
 
 userRouter.post("/signup", async (req, res) => {
     const data = req.body;
     try {
-        validate(req.body);
+        validateSignUp(req.body);
         const password = data.password;
         const hashPassword = await bcrypt.hash(password, 10);
         console.log("hasPassword: ", hashPassword);
@@ -28,21 +28,20 @@ userRouter.post("/signup", async (req, res) => {
 userRouter.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
-        if (!validator.isEmail(email)) {
-            throw new Error("Invalid email id format");
-        }
+        validateLogin(req.body)
         const user = await User.findOne({ email: email });
 
         if (!user) {
             throw new Error("Invalid user Credentials");
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = await user.validatePassword(password);
+        
         if (!isPasswordValid) {
              throw new Error("Invalid user Credentials");
         }
        
-        const token = await jwt.sign({_id: user._id}, process.env.JWT_SECRET, {expiresIn: "1d"})
+        const token = await user.getJWT();
         res.cookie("token", token, {expires: new Date(Date.now() + 12 * 3600000) });
         res.status(200).send("User Login Successfull");
 
