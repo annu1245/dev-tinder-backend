@@ -22,8 +22,8 @@ const validateSignUp = (data) => {
     }
 };
 
-const validateLogin = (data) => {
-  const {email, password} = data;
+const validateLogin = (req) => {
+  const {email, password} = req.body;
 
   if(!email) {
     throw new Error("EmailId is required")
@@ -36,4 +36,10 @@ const validateLogin = (data) => {
   }
 }
 
-module.exports = { validateSignUp, validateLogin }
+const validateEditRoute = (req) => {
+  const ALLOWED_EDIT = ["gender", "age", "profileUrl", "about", "skills"];
+  const isEditAllowed = Object.keys(req.body).every(key => ALLOWED_EDIT.includes(key));
+  return isEditAllowed;
+}
+
+module.exports = { validateSignUp, validateLogin, validateEditRoute }
