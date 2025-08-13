@@ -37,7 +37,7 @@ const validateLogin = (req) => {
 }
 
 const validateEditRoute = (req) => {
-  const ALLOWED_EDIT = ["gender", "age", "profileUrl", "about", "skills"];
+  const ALLOWED_EDIT = ["firstName","lastName", "gender", "age", "profileUrl", "about", "skills"];
   const isEditAllowed = Object.keys(req.body).every(key => ALLOWED_EDIT.includes(key));
   return isEditAllowed;
 }

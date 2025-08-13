@@ -8,10 +8,13 @@ authRouter.post('/signup', async (req, res) => {
   const data = req.body;
     try {
         validateSignUp(req.body);
+
+        const existingUser = await User.findOne({email: req.body.email})
+        if (existingUser) {
+            return res.status(409).send("User already exists")
+        }
         const password = data.password;
         const hashPassword = await bcrypt.hash(password, 10);
-        console.log("hasPassword: ", hashPassword);
-
         const user = new User({ ...data, password: hashPassword });
         
         await user.save();
@@ -40,10 +43,10 @@ authRouter.post("/login", async (req, res) => {
        
         const token = await user.getJWT();
         res.cookie("token", token, {expires: new Date(Date.now() + 12 * 3600000) });
-        res.status(200).send("User Login Successfull");
+        res.json({message: "User logged in successfully", data: user});
 
     } catch (error) {
-        res.status(400).send("login failed: " + error.message);
+        res.status(400).json({message: error.message});
     }
 });
 

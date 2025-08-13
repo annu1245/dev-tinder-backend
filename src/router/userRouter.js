@@ -5,6 +5,8 @@ const User = require('../model/user');
 
 const userAuth = require('../middleware/auth')
 
+const SHARED_USER_DATA = ["firstName", "lastName", "age", "skills", "about", "photoUrl", "gender"];
+
 userRouter.get('/request/received', userAuth, async(req, res) => {
   try {
     const loggedInUser = req.user;
@@ -12,7 +14,7 @@ userRouter.get('/request/received', userAuth, async(req, res) => {
     const connectionRequest = await ConnectionRequest.find({
       toUserId: loggedInUser._id,
       status: 'interested'
-    }).populate("fromUserId", "firstName lastName age skills about")
+    }).populate("fromUserId", SHARED_USER_DATA)
    
     res.status(200).json({message: "Pending requests", data: connectionRequest});
 
@@ -28,7 +30,9 @@ userRouter.get('/request/send', userAuth, async(req, res) => {
     const connectionRequest = await ConnectionRequest.find({
       fromUserId: loggedInUser._id,
       status: 'interested'
-    }).populate("toUserId fromUserId", "firstName lastName")
+    }) .select('toUserId')
+    .populate("toUserId", SHARED_USER_DATA)
+   
     
     res.status(200).json({message: 'request send', data: connectionRequest})
 
@@ -51,10 +55,24 @@ userRouter.get('/connections', userAuth, async(req, res) => {
         }
       ],
       status: 'accepted'
-    }).populate("fromUserId", "firstName lastName")
+    }).populate("fromUserId toUserId", SHARED_USER_DATA)
 
+    console.log(connectionRequest)
+   
+    const connections = connectionRequest.map(connection => {
+      let userData;
+      if (connection.fromUserId._id.toString() == loggedInUser._id.toString()) {
+        userData = connection.toUserId;
+      }else {
+        userData = connection.fromUserId;
+      }
+      return {
+        _id: connection._id,
+        userDetails: userData
+      }
+    })
 
-    res.status(200).json({message: "Your connections", data: connectionRequest})
+    res.status(200).json({message: "Your connections", data: connections})
   } catch (error) {
     res.status(400).send("Connection API ERROR: "+ error.message)
     

@@ -4,7 +4,7 @@ const User = require("../model/user");
 const ConnectionRequest = require("../model/connectionRequest");
 const userAuth = require("../middleware/auth");
 
-requestRouter.post("/send/:status/:toUserId", userAuth, async (req, res) => {
+requestRouter.post('/send/:status/:toUserId', userAuth, async (req, res) => {
     try {
         const status = req.params.status;
         const toUserId = req.params.toUserId;
@@ -46,7 +46,7 @@ requestRouter.post("/send/:status/:toUserId", userAuth, async (req, res) => {
         } 
         await connectionRequest.save();
 
-        res.status(200).json({ message: customMessage });
+        res.json({ message: customMessage });
     } catch (error) {
         res.status(400).send("ERROR: " + error.message);
     }
@@ -67,7 +67,7 @@ requestRouter.post('/review/:status/:requestId', userAuth, async(req, res) => {
             _id: requestId,
             toUserId: loggedInUser._id,
             status: 'interested'
-        })
+        }).populate("fromUserId", "firstName")
 
         if (!connectionRequest) {
             return res.status(404).send("Connection request not Found")
@@ -76,15 +76,26 @@ requestRouter.post('/review/:status/:requestId', userAuth, async(req, res) => {
         connectionRequest.status = status;
 
         const data = await connectionRequest.save()
-
-        let customMessage;
+        
+        let customMessage; 
         if (status == 'accepted') {
-            customMessage = `${loggedInUser.firstName} has accepted the connection request of ${data.firstName}`
+            customMessage = `${loggedInUser.firstName} has accepted the connection request of ${data.fromUserId.firstName}`
         } else if (status == 'rejected') {
-            customMessage = `${loggedInUser.firstName} rejected the connection request of ${connectionRequest.firstName}`
+            customMessage = `${loggedInUser.firstName} rejected the connection request of ${data.fromUserId.firstName}`
         }
-        return res.status(200).json({message: customMessage, data: data})
+        return res.status(200).json({message: customMessage})
 
+    } catch (error) {
+        res.status(400).send("ERROR: "+ error.message)
+    }
+})
+
+// delete a sended request
+requestRouter.delete('/:requestId', userAuth, async(req, res) => {
+    const requestId = req.params.requestId;
+    try {
+        await ConnectionRequest.findByIdAndDelete({_id: requestId})
+        return res.json({message: "request deleted"})
     } catch (error) {
         res.status(400).send("ERROR: "+ error.message)
     }
