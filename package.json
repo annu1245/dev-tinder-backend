@@ -2,6 +2,7 @@
   "name": "dev-tinder-backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type":"commonjs",
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js"

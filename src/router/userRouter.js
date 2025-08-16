@@ -57,8 +57,6 @@ userRouter.get('/connections', userAuth, async(req, res) => {
       status: 'accepted'
     }).populate("fromUserId toUserId", SHARED_USER_DATA)
 
-    console.log(connectionRequest)
-   
     const connections = connectionRequest.map(connection => {
       let userData;
       if (connection.fromUserId._id.toString() == loggedInUser._id.toString()) {

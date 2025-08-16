@@ -1,0 +1,50 @@
+[
+  {
+    "firstName": "Abhishekh",
+    "lastName": "Devdiga",
+    "email": "abhishekh@mail.com",
+    "password": "Password@123"
+  },
+  {
+    "firstName": "Ankush",
+    "lastName": "Gupta",
+    "email": "ankush@mail.com",
+    "password": "Password@123"
+  },
+  {
+    "firstName": "Omkar",
+    "lastName": "Pachadkar",
+    "email": "omkar@mail.com",
+    "password": "Password@123"
+  },
+  {
+    "firstName": "Aashish",
+    "lastName": "Kumavat",
+    "email": "aashish@mail.com",
+    "password": "Password@123"
+  },
+  {
+    "firstName": "Rajkumar",
+    "lastName": "Thakur",
+    "email": "rajkumar@mail.com",
+    "password": "Password@123"
+  },
+  {
+    "firstName": "Manoj",
+    "lastName": "Sharma",
+    "email": "manoj@mail.com",
+    "password": "Password@123"
+  },
+  {
+    "firstName": "Shivam",
+    "lastName": "Vishwakarma",
+    "email": "shivam@mail.com",
+    "password": "Password@123"
+  },
+  {
+    "firstName": "Vishal",
+    "lastName": "Gupta",
+    "email": "vishal@mail.com",
+    "password": "Password@123"
+  }
+]

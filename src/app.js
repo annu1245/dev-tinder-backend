@@ -14,7 +14,7 @@ const userRouter = require('./router/userRouter');
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: process.env.REACT_ORIGIN,
+  origin: [process.env.REACT_ORIGIN_1, process.env.REACT_ORIGIN_2],
   credentials: true,
 }));
 
