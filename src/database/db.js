@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 
 
-const connectDB = async() => {
+const connectMongo = async() => {
   try {
     await mongoose.connect("mongodb://127.0.0.1:27017/devTinderTwo")
   } catch (error) {
@@ -10,4 +10,4 @@ const connectDB = async() => {
   }
 }
 
-module.exports = connectDB;
+module.exports = connectMongo;
